@@ -1,189 +1,484 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+<html xml:lang="ja" lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=0">
+<title>jQuery OnePage Scroll</title>
+<link rel="stylesheet" href="http://black-flag.net/data/css/reset.css">
+<link rel="stylesheet" href="css/common.css">
+<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(function(){
+	var setWrap = $('#container'),
+	setBase = $('.stageBase'),
+	scrollSpeed = 1000,
+	scrollEasing = 'swing',
+	slideSpeed = 500,
+	slideEasing = 'linear',
+	downBtn = 'show', // 'show' or 'hide'
+	urlHash = 'on', // 'on' or 'off'
+	setHash = '!page';
 
-    <title>NYC - Design Studio</title>
+	var url = document.URL,
+	stageSlide = $('.stageSlide');
 
-    <!-- Bootstrap core CSS -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet">
+	setWrap.append('<nav id="pageNav"><ul></ul></nav>');
+	setBase.each(function(i){
+		$('#pageNav ul').append('<li class="pagePn'+(i+1)+'"><a href="javascript:void(0);"></a></li>');
+	});
 
-    <!-- Custom styles for this template -->
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="assets/js/fancybox/jquery.fancybox.css" rel="stylesheet" />
+	if(downBtn == 'show'){
+		setWrap.append('<div id="pageDown"><a href="javascript:void(0);"></a></div>');
+	}
 
-    <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+	var coreNav = $('#pageNav'),
+	setNav = coreNav.find('ul'),
+	navList = setNav.find('li'),
+	navLength = navList.length;
+	setNav.find('li:first').addClass('activeStage');
+	$('body').attr('data-page','1');
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+	$(window).load(function(){
+		// StageHeight
+		$(window).resize(function(){
+			var wdHeight = $(window).height();
+			setBase.css({height:wdHeight});
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="js/jquery.bxslider.min.js"></script>
-    <link href="css/jquery.bxslider.css" rel="stylesheet" />
-    <script type="text/javascript">
-            $(document).ready(function(){
-                $('.bxslider').bxSlider({
-                    auto: true,
-                });
-        	});
-    </script>
+			var resizeContTop = parseInt(setWrap.css('top'));
 
-  </head>
+			if(resizeContTop === 0){
+				setWrap.css({top:'0'});
+			} else {
+				var activeStagePos = setNav.find('li.activeStage');
+				activeStagePos.each(function(){
+					var posIndex = navList.index(this);
+					setWrap.css({top:-(wdHeight*posIndex)});
+				});
+			}
 
-  <body data-spy="scroll" data-offset="0" data-target="#theMenu">
-		
-	<!-- Menu -->
-	<nav class="menu" id="theMenu">
-		<div class="menu-wrap">
-			<h1 class="logo"><a href="index.html#home">DSGN NYC</a></h1>
-			<i class="fa fa-times menu-close"></i>
-			<a href="#home" class="smoothScroll">Home</a>
-			<a href="#about" class="smoothScroll">About</a>
-			<a href="#portfolio" class="smoothScroll">Portfolio</a>
-			<a href="#services" class="smoothScroll">Services</a>
-			<a href="#contact" class="smoothScroll">Contact</a>
-			<a href="#"><i class="fa fa-facebook"></i></a>
-			<a href="#"><i class="fa fa-twitter"></i></a>
-			<a href="#"><i class="fa fa-dribbble"></i></a>
-			<a href="#"><i class="fa fa-envelope"></i></a>
-		</div>
-		
-		<!-- Menu button -->
-		<div id="menuToggle"><i class="fa fa-bars"></i></div>
-	</nav>
-
-	<section id="home" name="home"></section>
-	<div id="headerwrap">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
-					<h1>DESIGN STUDIO</h1>
-				</div>
-			</div><! --/row -->
-		</div><! --/container -->
-	</div><! --/headerwrap -->
-	
-	<div id="testimonials">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2 mt">
-				
-					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-					  <!-- Wrapper for slides -->
-					  <div class="carousel-inner">
-					    <div class="item active mb centered">
-					      <h3>MARK WEBBER</h3>
-					      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-					      <p><img class="img-circle" src="assets/img/pic-t1.jpg" width="80"></p>
-					    </div>
-
-					    <div class="item mb centered">
-					      <h3>PAUL LEVINGSTON</h3>
-					      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-					      <p><img class="img-circle" src="assets/img/pic-t2.jpg" width="80"></p>
-					    </div>
-
-					    <div class="item mb centered">
-					      <h3>LUCY LENNIN</h3>
-					      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-					      <p><img class="img-circle" src="assets/img/pic-t3.jpg" width="80"></p>
-					    </div>
-
-					  </div>
-					  <!-- Indicators -->
-					  <ol class="carousel-indicators">
-					    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-					    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-					    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-					  </ol>
-					</div>
-					  
-				</div><! --/col-lg-8 -->
-			</div><! --/row -->
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2 mt">
-				
-					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-					  <!-- Wrapper for slides -->
-					  <div class="carousel-inner">
-					    <div class="item active mb centered">
-					      <h3>MARK WEBBER</h3>
-					      <p>2Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-					      <p><img class="img-circle" src="assets/img/pic-t1.jpg" width="80"></p>
-					    </div>
-
-					    <div class="item mb centered">
-					      <h3>PAUL LEVINGSTON</h3>
-					      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-					      <p><img class="img-circle" src="assets/img/pic-t2.jpg" width="80"></p>
-					    </div>
-
-					    <div class="item mb centered">
-					      <h3>LUCY LENNIN</h3>
-					      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-					      <p><img class="img-circle" src="assets/img/pic-t3.jpg" width="80"></p>
-					    </div>
-
-					  </div>
-					  <!-- Indicators -->
-					  <ol class="carousel-indicators">
-					    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-					    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-					    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-					  </ol>
-					</div>
-					  
-				</div><! --/col-lg-8 -->
-			</div><! --/row -->
-<ul class="bxslider">
-<li><p>aaaaaaaa</p></li>
-<li><p>bbb</p></li>
-<li><p>ccccca</p></li>
-	</ul>
-		</div><! --/container -->
-	</div><! --/testimonials -->
-	
-	<! -- SERVICE SECTION -->
-	<section id="contact" name="contact"></section>
-	<! -- CONTACT SEPARATOR -->
-	<div class="sep contact" data-stellar-background-ratio="0.5"></div>
-	
-	
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="assets/js/classie.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/smoothscroll.js"></script>
-	<script src="assets/js/jquery.stellar.min.js"></script>
-	<script src="assets/js/fancybox/jquery.fancybox.js"></script>    
-	<script src="assets/js/main.js"></script>
-		<script>
-		$(function(){
-			$.stellar({
-				horizontalScrolling: false,
-				verticalOffset: 40
+			coreNav.each(function(){
+				var navHeight = $(this).height();
+				$(this).css({top:((wdHeight)-(navHeight))/2});
 			});
-		});
-		</script>
-		
-		<script type="text/javascript">
-      $(function() {
-        //    fancybox
-          jQuery(".fancybox").fancybox();
-      });
-	   </script>
+		}).resize();
 
-  </body>
+		// StageSlide
+		stageSlide.each(function(){
+			var thisSlide = $(this),
+			chdPanel = thisSlide.find('.slidePanel'),
+			chdPanelLength = chdPanel.length;
+
+			chdPanel.eq('0').addClass('activePanel').end().wrapAll('<div class="slideWrap"></div>');
+			thisSlide.append('<a href="javascript:void(0);" class="sdPrev"></a><a href="javascript:void(0);" class="sdNext"></a><div class="slideNav"></div>');
+
+			var thisWrap = thisSlide.find('.slideWrap'),
+			thisPrev = thisSlide.find('.sdPrev'),
+			thisNext = thisSlide.find('.sdNext'),
+			thisPn = thisSlide.find('.slideNav');
+
+			chdPanel.each(function(i){
+				thisPn.append('<a href="javascript:void(0);" class="slidePn'+(i+1)+'"></a>');
+			});
+
+			var pnPoint = thisPn.find('a'),
+			pnFirst = thisPn.find('a:first'),
+			pnLast = thisPn.find('a:last'),
+			pnCount = thisPn.find('a').length;
+
+			pnFirst.addClass('pnActive');
+
+			pnPoint.click(function(){
+				var pnNum = pnPoint.index(this),
+				mvWidth = chdPanel.width(),
+				wpWidth = thisWrap.width(),
+				moveLeft = mvWidth*pnNum;
+				thisWrap.stop().animate({left: -(moveLeft)},slideSpeed,slideEasing);
+				pnPoint.removeClass('pnActive');
+				$(this).addClass('pnActive');
+				pnAcvCheck();
+			});
+
+			thisPrev.click(function(){
+				thisWrap.not(':animated').each(function(){
+					thisPn.find('.pnActive').prev().click();
+					pnAcvCheck();
+				});
+			});
+
+			thisNext.click(function(){
+				thisWrap.not(':animated').each(function(){
+					thisPn.find('.pnActive').next().click();
+					pnAcvCheck();
+				});
+			});
+
+			function pnAcvCheck(){
+				var pnAcvNum = thisPn.find('.pnActive');
+				pnAcvNum.each(function(){
+					var acvIndex = pnPoint.index(this);
+					acvCount = acvIndex+1;
+					if(1 == acvCount){
+						thisPrev.css({display:'none'});
+						thisNext.css({display:'block'});
+					} else if(pnCount == acvCount){
+						thisPrev.css({display:'block'});
+						thisNext.css({display:'none'});
+					} else {
+						thisPrev.css({display:'block'});
+						thisNext.css({display:'block'});
+					}
+					chdPanel.removeClass('activePanel').eq(acvIndex).addClass('activePanel');
+				});
+			}
+			pnAcvCheck();
+
+			$(window).resize(function(){
+				var setWrapLeft = parseInt(thisWrap.css('left')),
+				setPanelWidth = chdPanel.width(),
+				setLeft = setWrapLeft / setPanelWidth;
+
+				var sdWidth = $(window).width(),
+				sdHeight = $(window).height();
+				thisSlide.css({width:sdWidth,height:sdHeight});
+				thisWrap.css({width:(sdWidth*chdPanelLength),height:sdHeight});
+				chdPanel.css({width:sdWidth,height:sdHeight});
+
+				var setWidth = chdPanel.width(),
+				adjLeft = setWidth * setLeft;
+				thisWrap.css({left:(adjLeft)});
+			}).resize();
+
+			var thisInt = thisWrap.find('.slideInitial');
+			thisInt.each(function(){
+				var pnlInt = thisWrap.find('.slideInitial');
+				pnlInt.each(function(){
+					var intIndex = chdPanel.index(this);
+					pnPoint.eq(intIndex).click();
+				});
+			});
+			setTimeout(function(){
+				thisSlide.css({visibility:'visible',opacity:'0'}).animate({opacity:'1'},slideSpeed);
+			},slideSpeed);
+		});
+
+		// MouseWheelEvent
+		var mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
+		$(document).on(mousewheelevent,function(e){
+			if(!(setWrap.is(':animated'))){
+				e.preventDefault();
+				var delta = e.originalEvent.deltaY ? -(e.originalEvent.deltaY) : e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -(e.originalEvent.detail);
+				if (delta < 0){
+					motionDown();
+				} else {
+					motionUp();
+				}
+			}
+		});
+
+		// KeyEvent
+		$('html').keydown(function(e){
+			if(setWrap.is(':animated') || setWrap.find('*').is(':animated')){
+				e.preventDefault();
+			} else {
+				var acvStgSwP = parseInt($('body').attr('data-page'));
+				switch(e.which){
+					case 33: // Key[PgUp]
+					e.preventDefault();
+					motionUp();
+					break;
+
+					case 34: // Key[PgDn]
+					e.preventDefault();
+					motionDown();
+					break;
+
+					case 38: // Key[↑]
+					e.preventDefault();
+					motionUp();
+					break;
+
+					case 40: // Key[↓]
+					e.preventDefault();
+					motionDown();
+					break;
+
+					case 37: // Key[←]
+					e.preventDefault();
+					var dsChkP = $('#stage' + acvStgSwP + ' .sdPrev').css('display');
+					if (!(dsChkP == 'none')){
+						$('#stage' + acvStgSwP + ' .sdPrev').click();
+					}
+					break;
+
+					case 39: // Key[→]
+					e.preventDefault();
+					var dsChkN = $('#stage' + acvStgSwP + ' .sdNext').css('display');
+					if (!(dsChkN == 'none')){
+						$('#stage' + acvStgSwP + ' .sdNext').click();
+					}
+					break;
+				}
+			}
+		});
+
+		// FlickEvent
+		var isTouch = ('ontouchstart' in window);
+		setWrap.on(
+			{'touchstart': function(e){
+				if(setWrap.is(':animated')){
+					e.preventDefault();
+				} else {
+					this.pageY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
+					this.topBegin = parseInt($(this).css('top'));
+					this.top = parseInt($(this).css('top'));
+					this.touched = true;
+				}
+			},'touchmove': function(e){
+				if(!this.touched){return;}
+				e.preventDefault();
+				this.top = this.top - (this.pageY - (isTouch ? event.changedTouches[0].pageY : e.pageY));
+				this.pageY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
+			},'touchend': function(e){
+				if (!this.touched) {return;}
+				this.touched = false;
+
+				if(((this.topBegin)-30) > this.top){
+					motionDown();
+				} else if(((this.topBegin)+30) < this.top){
+					motionUp();
+				}
+			}
+		});
+
+		// ScrollUpEvent
+		function motionUp(){
+			var stageHeightU = setBase.height(),
+			contTopUp = parseInt(setWrap.css('top')),
+			moveTopUp = contTopUp + stageHeightU;
+			$('input,textarea').blur();
+			if(!(contTopUp === 0)){
+				setWrap.stop().animate({top:moveTopUp},scrollSpeed,scrollEasing);
+				setNav.find('li.activeStage').removeClass('activeStage').prev().addClass('activeStage');
+
+				var acvStageP = parseInt($('body').attr('data-page')),
+				setPrev = acvStageP-1;
+				$('body').attr('data-page',setPrev);
+				if(downBtn == 'show'){
+					pagePos();
+				}
+			}
+			if(urlHash == 'on'){
+				replaceHash();
+			}
+		}
+
+		// ScrollDownEvent
+		function motionDown(){
+			var stageHeightD = setBase.height(),
+			contTopDown = parseInt(setWrap.css('top')),
+			moveTopDown = contTopDown - stageHeightD;
+			$('input,textarea').blur();
+
+			var contHeight = setWrap.height(),
+			maxHeightAdj = -(contHeight - stageHeightD);
+
+			if(!(contTopDown == maxHeightAdj)){
+				setWrap.stop().animate({top:moveTopDown},scrollSpeed,scrollEasing);
+				setNav.find('li.activeStage').removeClass('activeStage').next().addClass('activeStage');
+
+				var acvStageN = parseInt($('body').attr('data-page')),
+				setNext = acvStageN+1;
+				$('body').attr('data-page',setNext);
+				if(downBtn == 'show'){
+					pagePos();
+				}
+			}
+			if(urlHash == 'on'){
+				replaceHash();
+			}
+		}
+
+		// SideNaviClick
+		navList.click(function(){
+			if(!(setWrap.is(':animated'))){
+				var crtIndex = navList.index(this),
+				crtHeight = $(window).height();
+				setWrap.stop().animate({top:-(crtHeight*crtIndex)},scrollSpeed,scrollEasing);
+				setNav.find('li.activeStage').removeClass('activeStage');
+				$(this).addClass('activeStage');
+
+				$('body').attr('data-page',crtIndex+1);
+
+				if(downBtn == 'show'){
+					pagePos();
+				}
+				if(urlHash == 'on'){
+					replaceHash();
+				}
+			}
+		});
+
+		// PageDownBtnClick
+		$('#pageDown a').click(function(){
+			if(!(setWrap.is(':animated'))){
+				var navActive = setNav.find('li.activeStage');
+				navActive.each(function(){
+					var navIndex = navList.index(this),
+					setNav = navIndex+1;
+					if(!(setNav == navLength)){
+						$(this).next().click();
+					}
+				});
+				if(urlHash == 'on'){
+					replaceHash();
+				}
+			}
+		});
+		function pagePos(){
+			var pnAcv = coreNav.find('li.activeStage');
+			pnAcv.each(function(){
+				var pnIndexN = navList.index(this),
+				pnCountN = pnIndexN+1;
+				if(pnCountN == navLength){
+					$('#pageDown').css({display:'none'});
+				} else {
+					$('#pageDown').css({display:'block'});
+				}
+			});
+		}
+
+		// HashReplace
+		function replaceHash(){
+			var pnAcv = coreNav.find('li.activeStage');
+			pnAcv.each(function(){
+				var pnIndexN = navList.index(this),
+				pnCountN = pnIndexN+1;
+				location.hash = setHash + pnCountN;
+			});
+		}
+		if(urlHash == 'on'){
+			replaceHash();
+		}
+
+		// OpeningFade
+		$('body').css({visibility:'visible',opacity:'0'}).animate({opacity:'1'},1000);
+
+		// LoadPageMove
+		if(url.indexOf(setHash) !== -1){
+			var numSplit = ((url.split(setHash)[1])-1);
+			navList.eq(numSplit).click();
+		}
+	});
+
+	// HashChangeEvent
+	if(urlHash == 'on'){
+		$(window).on('hashchange',function(){
+			var stateUrl = document.URL,
+			hashSplit = ((stateUrl.split(setHash)[1])-1);
+			navList.eq(hashSplit).click();
+		});
+	}
+});
+</script>
+</head>
+
+<body>
+
+<div id="container">
+
+<section id="stage1" class="stageBase">
+<div class="fieldWrap">
+<h1>jQuery OnePage Scroll</h1>
+<p>ここは1ページ目</p>
+</div><!--/.fieldWrap -->
+</section>
+
+<section id="stage2" class="stageBase">
+<div class="fieldWrap">
+<p>ここは2ページ目</p>
+</div><!--/.fieldWrap -->
+</section>
+
+<section id="stage3" class="stageBase">
+<div class="stageSlide">
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>ここは3ページ目<br>
+	スライドエリア【1】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【2】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【3】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+</div><!--/.stageSlide -->
+</section>
+
+<section id="stage4" class="stageBase">
+<div class="stageSlide">
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【1】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel slideInitial">
+	<div class="fieldWrap">
+	<p>ここは4ページ目<br>
+	スライドエリア【2】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【3】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+</div><!--/.stageSlide -->
+</section>
+
+<section id="stage5" class="stageBase">
+<div class="stageSlide">
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【1】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【2】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel">
+	<div class="fieldWrap">
+	<p>スライドエリア【3】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<div class="slidePanel slideInitial">
+	<div class="fieldWrap">
+	<p>ここは5ページ目<br>
+	スライドエリア【4】</p>
+	</div><!--/.fieldWrap -->
+	</div><!--/.slidePanel -->
+
+	<h2>COPYRIGHT &copy; <a href="http://black-flag.net/">BLACKFLAG.NET</a> ALL RIGHTS RESERVED.</h2>
+</div><!--/.stageSlide -->
+</section>
+
+</div><!--/#container-->
+
+</body>
 </html>
