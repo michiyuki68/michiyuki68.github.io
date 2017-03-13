@@ -1,484 +1,127 @@
 <!DOCTYPE html>
-<html xml:lang="ja" lang="ja">
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="user-scalable=0">
-<title>jQuery OnePage Scroll</title>
-<link rel="stylesheet" href="https://black-flag.net/data/css/reset.css">
-<link rel="stylesheet" href="css/common.css">
-<!--[if lt IE 9]><script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script>
-$(function(){
-	var setWrap = $('#container'),
-	setBase = $('.stageBase'),
-	scrollSpeed = 1000,
-	scrollEasing = 'swing',
-	slideSpeed = 500,
-	slideEasing = 'linear',
-	downBtn = 'show', // 'show' or 'hide'
-	urlHash = 'on', // 'on' or 'off'
-	setHash = '!page';
+    <meta charset="utf-8">
+    <title>Swiper demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 
-	var url = document.URL,
-	stageSlide = $('.stageSlide');
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="css/swiper.min.css">
 
-	setWrap.append('<nav id="pageNav"><ul></ul></nav>');
-	setBase.each(function(i){
-		$('#pageNav ul').append('<li class="pagePn'+(i+1)+'"><a href="javascript:void(0);"></a></li>');
-	});
+    <!-- Demo styles -->
+    <style>
+    html, body {
+        position: relative;
+        height: 100%;
+    }
+    body {
+        background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color:#000;
+        margin: 0;
+        padding: 0;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
 
-	if(downBtn == 'show'){
-		setWrap.append('<div id="pageDown"><a href="javascript:void(0);"></a></div>');
-	}
-
-	var coreNav = $('#pageNav'),
-	setNav = coreNav.find('ul'),
-	navList = setNav.find('li'),
-	navLength = navList.length;
-	setNav.find('li:first').addClass('activeStage');
-	$('body').attr('data-page','1');
-
-	$(window).load(function(){
-		// StageHeight
-		$(window).resize(function(){
-			var wdHeight = $(window).height();
-			setBase.css({height:wdHeight});
-
-			var resizeContTop = parseInt(setWrap.css('top'));
-
-			if(resizeContTop === 0){
-				setWrap.css({top:'0'});
-			} else {
-				var activeStagePos = setNav.find('li.activeStage');
-				activeStagePos.each(function(){
-					var posIndex = navList.index(this);
-					setWrap.css({top:-(wdHeight*posIndex)});
-				});
-			}
-
-			coreNav.each(function(){
-				var navHeight = $(this).height();
-				$(this).css({top:((wdHeight)-(navHeight))/2});
-			});
-		}).resize();
-
-		// StageSlide
-		stageSlide.each(function(){
-			var thisSlide = $(this),
-			chdPanel = thisSlide.find('.slidePanel'),
-			chdPanelLength = chdPanel.length;
-
-			chdPanel.eq('0').addClass('activePanel').end().wrapAll('<div class="slideWrap"></div>');
-			thisSlide.append('<a href="javascript:void(0);" class="sdPrev"></a><a href="javascript:void(0);" class="sdNext"></a><div class="slideNav"></div>');
-
-			var thisWrap = thisSlide.find('.slideWrap'),
-			thisPrev = thisSlide.find('.sdPrev'),
-			thisNext = thisSlide.find('.sdNext'),
-			thisPn = thisSlide.find('.slideNav');
-
-			chdPanel.each(function(i){
-				thisPn.append('<a href="javascript:void(0);" class="slidePn'+(i+1)+'"></a>');
-			});
-
-			var pnPoint = thisPn.find('a'),
-			pnFirst = thisPn.find('a:first'),
-			pnLast = thisPn.find('a:last'),
-			pnCount = thisPn.find('a').length;
-
-			pnFirst.addClass('pnActive');
-
-			pnPoint.click(function(){
-				var pnNum = pnPoint.index(this),
-				mvWidth = chdPanel.width(),
-				wpWidth = thisWrap.width(),
-				moveLeft = mvWidth*pnNum;
-				thisWrap.stop().animate({left: -(moveLeft)},slideSpeed,slideEasing);
-				pnPoint.removeClass('pnActive');
-				$(this).addClass('pnActive');
-				pnAcvCheck();
-			});
-
-			thisPrev.click(function(){
-				thisWrap.not(':animated').each(function(){
-					thisPn.find('.pnActive').prev().click();
-					pnAcvCheck();
-				});
-			});
-
-			thisNext.click(function(){
-				thisWrap.not(':animated').each(function(){
-					thisPn.find('.pnActive').next().click();
-					pnAcvCheck();
-				});
-			});
-
-			function pnAcvCheck(){
-				var pnAcvNum = thisPn.find('.pnActive');
-				pnAcvNum.each(function(){
-					var acvIndex = pnPoint.index(this);
-					acvCount = acvIndex+1;
-					if(1 == acvCount){
-						thisPrev.css({display:'none'});
-						thisNext.css({display:'block'});
-					} else if(pnCount == acvCount){
-						thisPrev.css({display:'block'});
-						thisNext.css({display:'none'});
-					} else {
-						thisPrev.css({display:'block'});
-						thisNext.css({display:'block'});
-					}
-					chdPanel.removeClass('activePanel').eq(acvIndex).addClass('activePanel');
-				});
-			}
-			pnAcvCheck();
-
-			$(window).resize(function(){
-				var setWrapLeft = parseInt(thisWrap.css('left')),
-				setPanelWidth = chdPanel.width(),
-				setLeft = setWrapLeft / setPanelWidth;
-
-				var sdWidth = $(window).width(),
-				sdHeight = $(window).height();
-				thisSlide.css({width:sdWidth,height:sdHeight});
-				thisWrap.css({width:(sdWidth*chdPanelLength),height:sdHeight});
-				chdPanel.css({width:sdWidth,height:sdHeight});
-
-				var setWidth = chdPanel.width(),
-				adjLeft = setWidth * setLeft;
-				thisWrap.css({left:(adjLeft)});
-			}).resize();
-
-			var thisInt = thisWrap.find('.slideInitial');
-			thisInt.each(function(){
-				var pnlInt = thisWrap.find('.slideInitial');
-				pnlInt.each(function(){
-					var intIndex = chdPanel.index(this);
-					pnPoint.eq(intIndex).click();
-				});
-			});
-			setTimeout(function(){
-				thisSlide.css({visibility:'visible',opacity:'0'}).animate({opacity:'1'},slideSpeed);
-			},slideSpeed);
-		});
-
-		// MouseWheelEvent
-		var mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
-		$(document).on(mousewheelevent,function(e){
-			if(!(setWrap.is(':animated'))){
-				e.preventDefault();
-				var delta = e.originalEvent.deltaY ? -(e.originalEvent.deltaY) : e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -(e.originalEvent.detail);
-				if (delta < 0){
-					motionDown();
-				} else {
-					motionUp();
-				}
-			}
-		});
-
-		// KeyEvent
-		$('html').keydown(function(e){
-			if(setWrap.is(':animated') || setWrap.find('*').is(':animated')){
-				e.preventDefault();
-			} else {
-				var acvStgSwP = parseInt($('body').attr('data-page'));
-				switch(e.which){
-					case 33: // Key[PgUp]
-					e.preventDefault();
-					motionUp();
-					break;
-
-					case 34: // Key[PgDn]
-					e.preventDefault();
-					motionDown();
-					break;
-
-					case 38: // Key[↑]
-					e.preventDefault();
-					motionUp();
-					break;
-
-					case 40: // Key[↓]
-					e.preventDefault();
-					motionDown();
-					break;
-
-					case 37: // Key[←]
-					e.preventDefault();
-					var dsChkP = $('#stage' + acvStgSwP + ' .sdPrev').css('display');
-					if (!(dsChkP == 'none')){
-						$('#stage' + acvStgSwP + ' .sdPrev').click();
-					}
-					break;
-
-					case 39: // Key[→]
-					e.preventDefault();
-					var dsChkN = $('#stage' + acvStgSwP + ' .sdNext').css('display');
-					if (!(dsChkN == 'none')){
-						$('#stage' + acvStgSwP + ' .sdNext').click();
-					}
-					break;
-				}
-			}
-		});
-
-		// FlickEvent
-		var isTouch = ('ontouchstart' in window);
-		setWrap.on(
-			{'touchstart': function(e){
-				if(setWrap.is(':animated')){
-					e.preventDefault();
-				} else {
-					this.pageY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
-					this.topBegin = parseInt($(this).css('top'));
-					this.top = parseInt($(this).css('top'));
-					this.touched = true;
-				}
-			},'touchmove': function(e){
-				if(!this.touched){return;}
-				e.preventDefault();
-				this.top = this.top - (this.pageY - (isTouch ? event.changedTouches[0].pageY : e.pageY));
-				this.pageY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
-			},'touchend': function(e){
-				if (!this.touched) {return;}
-				this.touched = false;
-
-				if(((this.topBegin)-30) > this.top){
-					motionDown();
-				} else if(((this.topBegin)+30) < this.top){
-					motionUp();
-				}
-			}
-		});
-
-		// ScrollUpEvent
-		function motionUp(){
-			var stageHeightU = setBase.height(),
-			contTopUp = parseInt(setWrap.css('top')),
-			moveTopUp = contTopUp + stageHeightU;
-			$('input,textarea').blur();
-			if(!(contTopUp === 0)){
-				setWrap.stop().animate({top:moveTopUp},scrollSpeed,scrollEasing);
-				setNav.find('li.activeStage').removeClass('activeStage').prev().addClass('activeStage');
-
-				var acvStageP = parseInt($('body').attr('data-page')),
-				setPrev = acvStageP-1;
-				$('body').attr('data-page',setPrev);
-				if(downBtn == 'show'){
-					pagePos();
-				}
-			}
-			if(urlHash == 'on'){
-				replaceHash();
-			}
-		}
-
-		// ScrollDownEvent
-		function motionDown(){
-			var stageHeightD = setBase.height(),
-			contTopDown = parseInt(setWrap.css('top')),
-			moveTopDown = contTopDown - stageHeightD;
-			$('input,textarea').blur();
-
-			var contHeight = setWrap.height(),
-			maxHeightAdj = -(contHeight - stageHeightD);
-
-			if(!(contTopDown == maxHeightAdj)){
-				setWrap.stop().animate({top:moveTopDown},scrollSpeed,scrollEasing);
-				setNav.find('li.activeStage').removeClass('activeStage').next().addClass('activeStage');
-
-				var acvStageN = parseInt($('body').attr('data-page')),
-				setNext = acvStageN+1;
-				$('body').attr('data-page',setNext);
-				if(downBtn == 'show'){
-					pagePos();
-				}
-			}
-			if(urlHash == 'on'){
-				replaceHash();
-			}
-		}
-
-		// SideNaviClick
-		navList.click(function(){
-			if(!(setWrap.is(':animated'))){
-				var crtIndex = navList.index(this),
-				crtHeight = $(window).height();
-				setWrap.stop().animate({top:-(crtHeight*crtIndex)},scrollSpeed,scrollEasing);
-				setNav.find('li.activeStage').removeClass('activeStage');
-				$(this).addClass('activeStage');
-
-				$('body').attr('data-page',crtIndex+1);
-
-				if(downBtn == 'show'){
-					pagePos();
-				}
-				if(urlHash == 'on'){
-					replaceHash();
-				}
-			}
-		});
-
-		// PageDownBtnClick
-		$('#pageDown a').click(function(){
-			if(!(setWrap.is(':animated'))){
-				var navActive = setNav.find('li.activeStage');
-				navActive.each(function(){
-					var navIndex = navList.index(this),
-					setNav = navIndex+1;
-					if(!(setNav == navLength)){
-						$(this).next().click();
-					}
-				});
-				if(urlHash == 'on'){
-					replaceHash();
-				}
-			}
-		});
-		function pagePos(){
-			var pnAcv = coreNav.find('li.activeStage');
-			pnAcv.each(function(){
-				var pnIndexN = navList.index(this),
-				pnCountN = pnIndexN+1;
-				if(pnCountN == navLength){
-					$('#pageDown').css({display:'none'});
-				} else {
-					$('#pageDown').css({display:'block'});
-				}
-			});
-		}
-
-		// HashReplace
-		function replaceHash(){
-			var pnAcv = coreNav.find('li.activeStage');
-			pnAcv.each(function(){
-				var pnIndexN = navList.index(this),
-				pnCountN = pnIndexN+1;
-				location.hash = setHash + pnCountN;
-			});
-		}
-		if(urlHash == 'on'){
-			replaceHash();
-		}
-
-		// OpeningFade
-		$('body').css({visibility:'visible',opacity:'0'}).animate({opacity:'1'},1000);
-
-		// LoadPageMove
-		if(url.indexOf(setHash) !== -1){
-			var numSplit = ((url.split(setHash)[1])-1);
-			navList.eq(numSplit).click();
-		}
-	});
-
-	// HashChangeEvent
-	if(urlHash == 'on'){
-		$(window).on('hashchange',function(){
-			var stateUrl = document.URL,
-			hashSplit = ((stateUrl.split(setHash)[1])-1);
-			navList.eq(hashSplit).click();
-		});
-	}
-});
-</script>
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+    </style>
 </head>
-
 <body>
+    <!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">　　日本とサウジアラビアの経済関係（３面きょうのことば）が新たな段階に入る。<br>１２日に来日したサウジのサルマン国王との間で日本企業の進出を促すために同国に経済特区をつくることで合意し、トヨタ自動車やＪＸグループ、３メガバンク、東京証券取引所などが経済面で協力する。日本への原油輸出に偏った貿易構造から脱却し、遅れていた日本企業の進出が本格化する。（関連記事５面に）
+　１３日に安倍晋三首相とサルマン国王が会談し、経済を軸にした協力方針「日・サウジ・ビジョン２０３０」を打ち出す。サウジが目指す石油に依存しない経済の構築を後押しするため、日本が製造業や医療、投資、金融などの分野で全面的に協力する内容だ。
+　ビジョンの柱は経済特区の開設。サウジ国内で工場や研究開発拠点を誘致する地域を特区に指定し、外資規制の緩和、税制優遇、関税手続きの簡略化、インフラ整備、労働環境の改善などをパッケージで用意する。
+　例えば自動車産業の特区では工場新設にかかる煩雑な手続きを減らしたり、日本から運ぶ部品への関税をなくしたりすることを想定。電力網や教育施設の整備など工場の労働環境の改善も検討する。特区に指定する地域は日本とサウジが両国の事情に詳しい民間出身者など各３人を双方に常駐させ、進出する日本企業やサウジ政府の要望を擦り合わせて決める。
+　翌１４日の投資フォーラムでは両国の民間企業同士の提携で合意する。東京証券取引所は年内にも上場を計画する世界最大の石油会社サウジアラムコと上場体制の整備を進める研究会を設置。ＪＸグループや日揮はサウジアラムコと石油やガスの技術開発で協力する。
+　三菱東京ＵＦＪ銀行、みずほ銀行、三井住友銀行の３メガバンクはサウジアラビア総合投資院とサウジへの投資促進に向けた情報交換を進める。外務省も両国のビザ発給要件の緩和について協議するなど、官民挙げて約３０案件に上るプロジェクトを進める。
+　サウジは財政収入の大半を石油関連事業に頼る偏った経済構造から脱却するため、ムハンマド副皇太子を中心に産業振興やインフラ整備を進めている。国民の約半数が２５歳未満で、成長市場としての魅力も大きい。
+　サウジ国王の来日は１９７１年のファイサル国王以来、４６年ぶり。サルマン国王は１５日まで日本に滞在した後、次の目的地の中国に向かう。</div>
+            <div class="swiper-slide">　　日本とサウジアラビアの経済関係（３面きょうのことば）が新たな段階に入る。１２日に来日したサウジのサルマン国王との間で日本企業の進出を促すために同国に経済特区をつくることで合意し、トヨタ自動車やＪＸグループ、３メガバンク、東京証券取引所などが経済面で協力する。日本への原油輸出に偏った貿易構造から脱却し、遅れていた日本企業の進出が本格化する。（関連記事５面に）
+　１３日に安倍晋三首相とサルマン国王が会談し、経済を軸にした協力方針「日・サウジ・ビジョン２０３０」を打ち出す。サウジが目指す石油に依存しない経済の構築を後押しするため、日本が製造業や医療、投資、金融などの分野で全面的に協力する内容だ。
+　ビジョンの柱は経済特区の開設。サウジ国内で工場や研究開発拠点を誘致する地域を特区に指定し、外資規制の緩和、税制優遇、関税手続きの簡略化、インフラ整備、労働環境の改善などをパッケージで用意する。
+　例えば自動車産業の特区では工場新設にかかる煩雑な手続きを減らしたり、日本から運ぶ部品への関税をなくしたりすることを想定。電力網や教育施設の整備など工場の労働環境の改善も検討する。特区に指定する地域は日本とサウジが両国の事情に詳しい民間出身者など各３人を双方に常駐させ、進出する日本企業やサウジ政府の要望を擦り合わせて決める。
+　翌１４日の投資フォーラムでは両国の民間企業同士の提携で合意する。東京証券取引所は年内にも上場を計画する世界最大の石油会社サウジアラムコと上場体制の整備を進める研究会を設置。ＪＸグループや日揮はサウジアラムコと石油やガスの技術開発で協力する。
+　三菱東京ＵＦＪ銀行、みずほ銀行、三井住友銀行の３メガバンクはサウジアラビア総合投資院とサウジへの投資促進に向けた情報交換を進める。外務省も両国のビザ発給要件の緩和について協議するなど、官民挙げて約３０案件に上るプロジェクトを進める。
+　サウジは財政収入の大半を石油関連事業に頼る偏った経済構造から脱却するため、ムハンマド副皇太子を中心に産業振興やインフラ整備を進めている。国民の約半数が２５歳未満で、成長市場としての魅力も大きい。
+　サウジ国王の来日は１９７１年のファイサル国王以来、４６年ぶり。サルマン国王は１５日まで日本に滞在した後、次の目的地の中国に向かう。</div>
+            <div class="swiper-slide">Slide 3</div>
+            <div class="swiper-slide">Slide 4</div>
+            <div class="swiper-slide">Slide 5</div>
+            <div class="swiper-slide">Slide 6</div>
+            <div class="swiper-slide">Slide 7</div>
+            <div class="swiper-slide">Slide 8</div>
+            <div class="swiper-slide">Slide 9</div>
+            <div class="swiper-slide">Slide 10</div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
 
-<div id="container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">Slide 21</div>
+            <div class="swiper-slide">　　日本とサウジアラビアの経済関係（３面きょうのことば）が新たな段階に入る。１２日に来日したサウジのサルマン国王との間で日本企業の進出を促すために同国に経済特区をつくることで合意し、トヨタ自動車やＪＸグループ、３メガバンク、東京証券取引所などが経済面で協力する。日本への原油輸出に偏った貿易構造から脱却し、遅れていた日本企業の進出が本格化する。（関連記事５面に）
+　１３日に安倍晋三首相とサルマン国王が会談し、経済を軸にした協力方針「日・サウジ・ビジョン２０３０」を打ち出す。サウジが目指す石油に依存しない経済の構築を後押しするため、日本が製造業や医療、投資、金融などの分野で全面的に協力する内容だ。
+　ビジョンの柱は経済特区の開設。サウジ国内で工場や研究開発拠点を誘致する地域を特区に指定し、外資規制の緩和、税制優遇、関税手続きの簡略化、インフラ整備、労働環境の改善などをパッケージで用意する。
+　例えば自動車産業の特区では工場新設にかかる煩雑な手続きを減らしたり、日本から運ぶ部品への関税をなくしたりすることを想定。電力網や教育施設の整備など工場の労働環境の改善も検討する。特区に指定する地域は日本とサウジが両国の事情に詳しい民間出身者など各３人を双方に常駐させ、進出する日本企業やサウジ政府の要望を擦り合わせて決める。
+　翌１４日の投資フォーラムでは両国の民間企業同士の提携で合意する。東京証券取引所は年内にも上場を計画する世界最大の石油会社サウジアラムコと上場体制の整備を進める研究会を設置。ＪＸグループや日揮はサウジアラムコと石油やガスの技術開発で協力する。
+　三菱東京ＵＦＪ銀行、みずほ銀行、三井住友銀行の３メガバンクはサウジアラビア総合投資院とサウジへの投資促進に向けた情報交換を進める。外務省も両国のビザ発給要件の緩和について協議するなど、官民挙げて約３０案件に上るプロジェクトを進める。
+　サウジは財政収入の大半を石油関連事業に頼る偏った経済構造から脱却するため、ムハンマド副皇太子を中心に産業振興やインフラ整備を進めている。国民の約半数が２５歳未満で、成長市場としての魅力も大きい。
+　サウジ国王の来日は１９７１年のファイサル国王以来、４６年ぶり。サルマン国王は１５日まで日本に滞在した後、次の目的地の中国に向かう。</div>
+            <div class="swiper-slide">Slide 23</div>
+            <div class="swiper-slide">Slide 4</div>
+            <div class="swiper-slide">Slide 5</div>
+            <div class="swiper-slide">Slide 6</div>
+            <div class="swiper-slide">Slide 7</div>
+            <div class="swiper-slide">Slide 8</div>
+            <div class="swiper-slide">Slide 9</div>
+            <div class="swiper-slide">Slide 10</div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
 
-<section id="stage1" class="stageBase">
-<div class="fieldWrap">
-<h1>jQuery OnePage Scroll</h1>
-<p>ここは1ページ目</p>
-</div><!--/.fieldWrap -->
-</section>
+    <!-- Swiper JS -->
+    <script src="js/swiper.min.js"></script>
 
-<section id="stage2" class="stageBase">
-<div class="fieldWrap">
-<p>ここは2ページ目</p>
-</div><!--/.fieldWrap -->
-</section>
-
-<section id="stage3" class="stageBase">
-<div class="stageSlide">
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>ここは3ページ目<br>
-	スライドエリア【1】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【2】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【3】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-</div><!--/.stageSlide -->
-</section>
-
-<section id="stage4" class="stageBase">
-<div class="stageSlide">
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【1】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel slideInitial">
-	<div class="fieldWrap">
-	<p>ここは4ページ目<br>
-	スライドエリア【2】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【3】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-</div><!--/.stageSlide -->
-</section>
-
-<section id="stage5" class="stageBase">
-<div class="stageSlide">
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【1】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【2】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel">
-	<div class="fieldWrap">
-	<p>スライドエリア【3】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<div class="slidePanel slideInitial">
-	<div class="fieldWrap">
-	<p>ここは5ページ目<br>
-	スライドエリア【4】</p>
-	</div><!--/.fieldWrap -->
-	</div><!--/.slidePanel -->
-
-	<h2>COPYRIGHT &copy; <a href="https://black-flag.net/">BLACKFLAG.NET</a> ALL RIGHTS RESERVED.</h2>
-</div><!--/.stageSlide -->
-</section>
-
-</div><!--/#container-->
-
+    <!-- Initialize Swiper -->
+    <script>
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        spaceBetween: 30
+    });
+    </script>
 </body>
 </html>
