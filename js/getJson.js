@@ -13,7 +13,9 @@ $(function() {
 
 //Category‚ª•Ï‚í‚Á‚½‚çdiv
 if (data[i].Category == strCtgr){
+alert('“ü‚Á‚½');
   if (strCtgr != ''){
+alert(strCtgr);
     ulObj1.append($(strAft));
   }
   strCtgr = data[i].Category;
