@@ -33,7 +33,7 @@ $(function () {
             console.log('dainyugo:' + strCtgr);
 
 
-            strAppend = strAppend + '<div class="swiper-slide">' + 'c' + data[i].Category + data[i].FirstBody + '</div>';
+            strAppend = strAppend + '<div class="swiper-slide">' + 'd' + data[i].Category + data[i].FirstBody + '</div>';
 
             //ulObj1.append($('<div class="swiper-slide">' + 'b' + data[i].Category + data[i].FirstBody + '</div>'));
 
