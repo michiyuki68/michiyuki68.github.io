@@ -28,7 +28,7 @@ if  (strCtgr != '') {
 }
             strCtgr = data[i].Category; //–ˆ‰ñ‘Þ”ð‚µ‚Ä‚¨‚­
 
-            strAppend = strAppend + '<div class="swiper-slide">' + 'f' + data[i].Category + data[i].FirstBody + '</div>';
+            strAppend = strAppend + '<div class="swiper-slide">' + 'g' + data[i].Category + data[i].FirstBody + '</div>';
 
             //ulObj1.append($('<div class="swiper-slide">' + 'b' + data[i].Category + data[i].FirstBody + '</div>'));
 
