@@ -9,7 +9,9 @@ $(function() {
       strAft = '</div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>';
 
     for (var i = 0; i < len; i++) {
-
+console.log("“ü‚é‘O");
+console.log(data[i].Category);
+console.log(strCtgr);
 
 //Category‚ª•Ï‚í‚Á‚½‚çdiv
 if (data[i].Category == strCtgr){
