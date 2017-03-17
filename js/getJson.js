@@ -6,8 +6,8 @@ $(function () {
           len = data.length,
           strCtgr = '',
           strAppend = '',
-          strPre = '<div class="swiper-container"><div class="swiper-wrapper">',
-          strAft = '</div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>';
+          strPre = '<div class="swiper-container"><div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-405px, 0px, 0px);">',
+          strAft = '</div><div class="swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>';
 
             //初回のみ必要
             if (strCtgr == '') {
