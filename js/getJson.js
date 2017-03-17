@@ -17,14 +17,15 @@ $(function () {
 
         for (var i = 0; i < len; i++) {
 
+if  (strCtgr != '') {
             //Category‚ª•Ï‚í‚Á‚½‚çdiv
-            if (data[i].Category != strCtgr) && (strCtgr != '') {
+            if (data[i].Category != strCtgr) {
                 //ulObj1.append($(strAft));
                 strAppend = strAppend + strAft;
                 //ulObj1.append($(strPre));
                 strAppend = strAppend + strPre;
             }
-
+}
             strCtgr = data[i].Category; //–ˆ‰ñ‘Þ”ð‚µ‚Ä‚¨‚­
 
             strAppend = strAppend + '<div class="swiper-slide">' + 'e' + data[i].Category + data[i].FirstBody + '</div>';
