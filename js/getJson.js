@@ -9,18 +9,20 @@ $(function() {
       strAft = '</div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>';
 
     for (var i = 0; i < len; i++) {
-console.log("“ü‚é‘O");
+console.log('before if');
 console.log(data[i].Category);
 console.log(strCtgr);
 
 //Category‚ª•Ï‚í‚Á‚½‚çdiv
 if (data[i].Category == strCtgr){
-console.log("“ü‚Á‚½");
+console.log("after if");
   if (strCtgr != ''){
 console.log(strCtgr);
     ulObj1.append($(strAft));
   }
+
   strCtgr = data[i].Category;
+console.log('dainyugo:' + strCtgr);
   //ƒ‰ƒXƒg‚Í‚â‚ç‚È‚¢
   ulObj1.append($(strPre));
 }
