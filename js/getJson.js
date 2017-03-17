@@ -21,7 +21,7 @@ $(function () {
             console.log(strCtgr);
 
             //Category‚ª•Ï‚í‚Á‚½‚çdiv
-            if (data[i].Category == strCtgr) {
+            if (data[i].Category != strCtgr) {
                 console.log("kawatta if");
                 //ulObj1.append($(strAft));
                 strAppend = strAppend + strAft;
