@@ -9,7 +9,7 @@ $(function () {
           strPre = '<div class="swiper-container"><div class="swiper-wrapper">',
           strAft = '</div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>';
 
-            //‰‰ñ‚Ì‚İ•K—v
+            //åˆå›ã®ã¿å¿…è¦
             if (strCtgr == '') {
                 //ulObj1.append($(strPre));
                 strAppend = strPre;
@@ -18,7 +18,7 @@ $(function () {
         for (var i = 0; i < len; i++) {
 
 if  (strCtgr != '') {
-            //Category‚ª•Ï‚í‚Á‚½‚çdiv
+            //CategoryãŒå¤‰ã‚ã£ãŸã‚‰div
             if (data[i].Category != strCtgr) {
                 //ulObj1.append($(strAft));
                 strAppend = strAppend + strAft;
@@ -26,7 +26,7 @@ if  (strCtgr != '') {
                 strAppend = strAppend + strPre;
             }
 }
-            strCtgr = data[i].Category; //–ˆ‰ñ‘Ş”ğ‚µ‚Ä‚¨‚­
+            strCtgr = data[i].Category; //æ¯å›é€€é¿ã—ã¦ãŠã
 
             strAppend = strAppend + '<div class="swiper-slide">' + 'h' + data[i].Category + data[i].FirstBody + '</div>';
 
@@ -34,10 +34,10 @@ if  (strCtgr != '') {
 
         } //for
 
-        //ÅŒã‚É•K—v
+        //æœ€å¾Œã«å¿…è¦
         strAppend = strAppend + strAft;
 
-        //‚Ü‚Æ‚ß‚ÄAppend‚·‚é
+        //ã¾ã¨ã‚ã¦Appendã™ã‚‹
         ulObj1.append($(strAppend));
 
     });
