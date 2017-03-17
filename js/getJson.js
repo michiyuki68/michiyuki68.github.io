@@ -13,7 +13,7 @@ $(function() {
 
 //Category‚ª•Ï‚í‚Á‚½‚çdiv
 if (data[i].Category == strCtgr){
-console.log('“ü‚Á‚½');
+console.log("“ü‚Á‚½");
   if (strCtgr != ''){
 console.log(strCtgr);
     ulObj1.append($(strAft));
