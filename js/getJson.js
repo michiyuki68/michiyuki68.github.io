@@ -9,20 +9,16 @@ $(function () {
           strPre = '<div class="swiper-container"><div class="swiper-wrapper">',
           strAft = '</div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>';
 
-        for (var i = 0; i < len; i++) {
             //初回のみ必要
             if (strCtgr == '') {
                 //ulObj1.append($(strPre));
                 strAppend = strPre;
             }
 
-            console.log('before if');
-            console.log(data[i].Category);
-            console.log(strCtgr);
+        for (var i = 0; i < len; i++) {
 
             //Categoryが変わったらdiv
-            if (data[i].Category != strCtgr) {
-                console.log("kawatta if");
+            if (data[i].Category != strCtgr) && (strCtgr != '') {
                 //ulObj1.append($(strAft));
                 strAppend = strAppend + strAft;
                 //ulObj1.append($(strPre));
@@ -30,20 +26,18 @@ $(function () {
             }
 
             strCtgr = data[i].Category; //毎回退避しておく
-            console.log('dainyugo:' + strCtgr);
 
-
-            strAppend = strAppend + '<div class="swiper-slide">' + 'd' + data[i].Category + data[i].FirstBody + '</div>';
+            strAppend = strAppend + '<div class="swiper-slide">' + 'e' + data[i].Category + data[i].FirstBody + '</div>';
 
             //ulObj1.append($('<div class="swiper-slide">' + 'b' + data[i].Category + data[i].FirstBody + '</div>'));
 
-        }
+        } //for
+
         //最後に必要
         strAppend = strAppend + strAft;
 
         //まとめてAppendする
         ulObj1.append($(strAppend));
-
 
     });
 });
