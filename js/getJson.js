@@ -26,7 +26,7 @@ console.log(strCtgr);
 }
 
 //if (data[i].Category == "ˆê–Ê"){
-      ulObj1.append($('<div class="swiper-slide">' + data[i].Category + data[i].FirstBody + '</div>'));
+      ulObj1.append($('<div class="swiper-slide">' + 'a' + data[i].Category + data[i].FirstBody + '</div>'));
 //    }
 
 //      ulObj1.append($(strPre + data[i].Category + data[i].FirstBody + '</div>'));
